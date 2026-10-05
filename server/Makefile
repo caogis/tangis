@@ -1,4 +1,4 @@
-.PHONY: build test run tidy vet clean ui desktop bench
+.PHONY: build test run tidy vet clean ui desktop bench dist kernel package package-all
 
 # 前端构建产物目录：webui 包以 go:embed 把它嵌入二进制
 WEB_DIST := ../web/dist
@@ -73,6 +73,19 @@ dist: ui kernel
 	chmod +x $(DIST)/start.sh $(DIST)/stop.sh $(DIST)/start.command $(DIST)/stop.command
 	cp ../deploy/desktop/README-DESKTOP.md $(DIST)/README.md
 	@echo "package ready: $(DIST)"
+
+# package：官方分发打包（走 deploy/desktop/build-dist.sh）——macOS 会产出可双击的
+# TanGIS.app（含图标与临时签名），并附 zip 与 sha256。区别见下：
+#   make dist     开发用：平铺目录，二进制在顶层，快
+#   make package  分发用：macOS 打成 .app，带图标/签名/校验和/用户文档
+package:
+	../deploy/desktop/build-dist.sh $(if $(GOOS_TARGET),$(GOOS_TARGET),$(GOOS_CUR)) $(if $(GOARCH_TARGET),$(GOARCH_TARGET),$(GOARCH_CUR))
+
+# package-all：本机可交叉构建的组合（linux 需额外的 musl 交叉工具链，默认不打）
+package-all:
+	../deploy/desktop/build-dist.sh darwin amd64
+	../deploy/desktop/build-dist.sh darwin arm64
+	../deploy/desktop/build-dist.sh windows amd64
 
 # dist-go：只交叉编译主二进制（不含 Rust 内核，用于 CI 分平台构建）
 dist-go: ui

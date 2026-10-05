@@ -86,6 +86,14 @@ type Config struct {
 	// 默认 false：固定监听 PORT（安装后访问指定端口即可），占用时报错退出，
 	// 避免用户访问到非预期端口。
 	PortAuto bool
+
+	// FSBrowse 是否开放本机目录浏览（建任务选路径，替代手填），
+	// 环境变量 TANGIS_FS_BROWSE，默认 on（=off 关闭，端点 404）。
+	FSBrowse bool
+	// FSRoots 目录浏览白名单（逗号分隔的绝对路径），环境变量
+	// TANGIS_FS_ROOTS。空=不限制（桌面单机版本机使用即默认语义）；
+	// 服务端多租户部署建议收紧到数据目录与上传目录。
+	FSRoots []string
 }
 
 // 运行模式取值（Mode）。
@@ -126,7 +134,24 @@ func Load() *Config {
 		Mode:           strings.ToLower(envOr("TANGIS_MODE", ModeServer)),
 		DesktopWorkers: envIntOr("TANGIS_DESKTOP_WORKERS", 1),
 		PortAuto:       envOr("TANGIS_PORT_AUTO", "") == "1",
+
+		FSBrowse: envOr("TANGIS_FS_BROWSE", "on") != "off",
+		FSRoots:  splitList(os.Getenv("TANGIS_FS_ROOTS")),
 	}
+}
+
+// splitList 解析逗号分隔列表（去空白、丢空项）。
+func splitList(raw string) []string {
+	out := []string{}
+	for _, s := range strings.Split(raw, ",") {
+		if s = strings.TrimSpace(s); s != "" {
+			out = append(out, s)
+		}
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
 }
 
 // envFallback 依次取多个环境变量（首参为默认值，其余为 env key），均未设置时用默认值。

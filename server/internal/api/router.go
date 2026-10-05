@@ -68,6 +68,14 @@ type AuthOptions struct {
 	Runtime RuntimeInfo
 	// KernelBin 内核可执行文件路径（合规同步算子 crs-identify/bursa 调用），可为空。
 	KernelBin string
+
+	// ---- 本机目录浏览（建任务选路径，替代手填路径） ----
+	// FSBrowseEnabled 是否开放 /api/v1/fs/browse 与 /api/v1/fs/mkdir
+	//（env TANGIS_FS_BROWSE，默认 on；off 时端点 404）。
+	FSBrowseEnabled bool
+	// FSBrowseRoots 允许浏览的根目录白名单（env TANGIS_FS_ROOTS 逗号分隔），
+	// 空=不限制。
+	FSBrowseRoots []string
 }
 
 // NewRouter 创建 gin 引擎并注册全部路由。
@@ -96,6 +104,8 @@ func NewRouter(store task.Store, publisher queue.Publisher, services *service.Se
 		Interrupter:         authOpts.Interrupter,
 		Runtime:             authOpts.Runtime,
 		KernelBin:           authOpts.KernelBin,
+		FSBrowseEnabled:     authOpts.FSBrowseEnabled,
+		FSBrowseRoots:       authOpts.FSBrowseRoots,
 	}
 
 	// /api/v1 跨域支持（浏览器直连必需）：自定义头 X-API-Key 触发预检，
@@ -129,6 +139,10 @@ func NewRouter(store task.Store, publisher queue.Publisher, services *service.Se
 		v1.GET("/tasks", h.ListTasks)
 		// 任务创建走每日配额中间件（M2-F14）：超限 429 + Retry-After，
 		// 成功后由 handler 记账（Quota nil 时中间件直通）。
+		// 本机目录浏览（建任务选路径用；FSBrowseEnabled=false 时 404）
+		v1.GET("/fs/browse", h.BrowseFS)
+		v1.POST("/fs/mkdir", h.MkdirFS)
+
 		v1.POST("/tasks", taskQuotaMiddleware(h), h.CreateTask)
 		v1.POST("/tasks/import", taskQuotaMiddleware(h), h.ImportTask) // .t3d 解包导入（M2-F07）
 		v1.GET("/tasks/:id", h.GetTask)
@@ -159,6 +173,8 @@ func NewRouter(store task.Store, publisher queue.Publisher, services *service.Se
 		v1.GET("/vector/layers/:name/metadata", h.VectorLayerMetadata)
 		// 导出为其它 GIS 软件可直接打开的文件（GeoJSON / GeoPackage / Shapefile zip）
 		v1.GET("/vector/layers/:name/export", h.ExportVectorLayer)
+		// 就地编辑：要素增删改（写回数据源，首次编辑前自动备份）
+		v1.POST("/vector/layers/:name/edits", h.ApplyVectorEdits)
 		v1.DELETE("/vector/layers/:name", h.DeleteVectorLayer)
 	}
 

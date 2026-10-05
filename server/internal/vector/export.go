@@ -163,30 +163,43 @@ func (s *Server) ExportLayer(ctx context.Context, layerName string, format Expor
 
 /* ---------------- GeoJSON ---------------- */
 
-func exportGeoJSON(name string, feats []FileFeature) (*ExportResult, error) {
+// marshalGeoJSONFeatures 把要素集序列化为 GeoJSON FeatureCollection 字节。
+// 导出与"就地编辑写回 GeoJSON 源文件"共用同一份实现，保证两条路径产物一致。
+func marshalGeoJSONFeatures(feats []FileFeature) ([]byte, int, error) {
 	arr := make([]map[string]any, 0, len(feats))
 	for i := range feats {
 		g := geometryToGeoJSON(feats[i].Geom)
 		if g == nil {
 			continue
 		}
-		arr = append(arr, map[string]any{
+		f := map[string]any{
 			"type":       "Feature",
-			"id":         feats[i].ID,
 			"geometry":   g,
 			"properties": feats[i].Props,
-		})
+		}
+		if feats[i].ID > 0 {
+			f["id"] = feats[i].ID
+		}
+		arr = append(arr, f)
 	}
 	doc := map[string]any{"type": "FeatureCollection", "features": arr}
 	data, err := json.Marshal(doc)
 	if err != nil {
-		return nil, fmt.Errorf("vector: 生成 GeoJSON 失败: %w", err)
+		return nil, 0, fmt.Errorf("vector: 生成 GeoJSON 失败: %w", err)
+	}
+	return data, len(arr), nil
+}
+
+func exportGeoJSON(name string, feats []FileFeature) (*ExportResult, error) {
+	data, n, err := marshalGeoJSONFeatures(feats)
+	if err != nil {
+		return nil, err
 	}
 	return &ExportResult{
 		Filename: name + ".geojson",
 		MimeType: "application/geo+json",
 		Data:     data,
-		Features: len(arr),
+		Features: n,
 	}, nil
 }
 
@@ -416,15 +429,16 @@ func shpTypeFor(gtype GeomType, feats []FileFeature) (int32, []int, int) {
 	return shpNull, nil, skipped
 }
 
-// exportShapefile 生成 Shapefile 套件并打包为 zip。
-func exportShapefile(name string, feats []FileFeature, srid int) (*ExportResult, error) {
+// buildShapefileSet 生成 Shapefile 文件族内容（后缀 → 字节）。
+// 导出打包与"就地编辑写回 Shapefile"共用；返回被跳过的要素数与提示。
+func buildShapefileSet(name string, feats []FileFeature, srid int) (map[string][]byte, int, int, []string, error) {
 	prj := canonicalWKT(srid)
 	if prj == "" {
-		return nil, fmt.Errorf("%w: 坐标系 EPSG:%d 暂不支持导出为 Shapefile（仅 4326 / 4490 / 3857）", ErrInvalid, srid)
+		return nil, 0, 0, nil, fmt.Errorf("%w: 坐标系 EPSG:%d 暂不支持写入 Shapefile（仅 4326 / 4490 / 3857）", ErrInvalid, srid)
 	}
 	shapeType, kept, skipped := shpTypeFor(GeomType(0), feats)
 	if shapeType == shpNull || len(kept) == 0 {
-		return nil, fmt.Errorf("%w: 图层没有可写入 Shapefile 的几何", ErrInvalid)
+		return nil, 0, 0, nil, fmt.Errorf("%w: 图层没有可写入 Shapefile 的几何", ErrInvalid)
 	}
 	columns, warn := dbColumnsForShapefile(inferAttrColumns(feats))
 
@@ -445,53 +459,54 @@ func exportShapefile(name string, feats []FileFeature, srid int) (*ExportResult,
 		shxBody.Write(shxRecord(offset, int32(len(content)/2)))
 		box = box.Union(feats[idx].Geom.Bounds())
 	}
-	shp := shpFileBytes(shapeType, box, shpBody.Bytes())
-	shx := shxFileBytes(shapeType, box, shxBody.Bytes())
-	dbf := dbfFileBytes(columns, feats, kept)
+	files := map[string][]byte{
+		".shp": shpFileBytes(shapeType, box, shpBody.Bytes()),
+		".shx": shxFileBytes(shapeType, box, shxBody.Bytes()),
+		".dbf": dbfFileBytes(columns, feats, kept),
+		".prj": []byte(prj),
+		// 显式声明 UTF-8：统一写 UTF-8，带上 .cpg 让 ArcGIS 等老软件
+		// 也能正确解码中文，不靠猜。
+		".cpg": []byte("UTF-8"),
+	}
+	var warnings []string
+	if skipped > 0 {
+		warnings = append(warnings, fmt.Sprintf(
+			"Shapefile 一个文件只能有一种几何类型，已跳过 %d 条其它类型的要素", skipped))
+	}
+	if warn != "" {
+		warnings = append(warnings, warn)
+	}
+	return files, len(kept), skipped, warnings, nil
+}
 
+// exportShapefile 生成 Shapefile 套件并打包为 zip。
+func exportShapefile(name string, feats []FileFeature, srid int) (*ExportResult, error) {
+	files, n, skipped, warnings, err := buildShapefileSet(name, feats, srid)
+	if err != nil {
+		return nil, err
+	}
 	var zipBuf bytes.Buffer
 	zw := zip.NewWriter(&zipBuf)
-	files := []struct {
-		suffix  string
-		content []byte
-	}{
-		{".shp", shp},
-		{".shx", shx},
-		{".dbf", dbf},
-		{".prj", []byte(prj)},
-		// 显式声明 UTF-8：本导出统一写 UTF-8，带上 .cpg 让 ArcGIS 等
-		// 老软件也能正确解码中文，不靠猜。
-		{".cpg", []byte("UTF-8")},
-	}
-	for _, f := range files {
-		w, err := zw.Create(name + f.suffix)
+	for _, suffix := range []string{".shp", ".shx", ".dbf", ".prj", ".cpg"} {
+		w, err := zw.Create(name + suffix)
 		if err != nil {
 			return nil, fmt.Errorf("vector: 打包 Shapefile 失败: %w", err)
 		}
-		if _, err := w.Write(f.content); err != nil {
+		if _, err := w.Write(files[suffix]); err != nil {
 			return nil, fmt.Errorf("vector: 打包 Shapefile 失败: %w", err)
 		}
 	}
 	if err := zw.Close(); err != nil {
 		return nil, fmt.Errorf("vector: 打包 Shapefile 失败: %w", err)
 	}
-
-	res := &ExportResult{
+	return &ExportResult{
 		Filename: name + "_shp.zip",
 		MimeType: "application/zip",
 		Data:     zipBuf.Bytes(),
-		Features: len(kept),
+		Features: n,
 		Skipped:  skipped,
-	}
-	if skipped > 0 {
-		res.Warnings = append(res.Warnings, fmt.Sprintf(
-			"Shapefile 一个文件只能有一种几何类型，已跳过 %d 条其它类型的要素", skipped))
-	}
-	if warn != "" {
-		res.Warnings = append(res.Warnings, warn)
-	}
-	res.Warnings = append(res.Warnings, "属性表以 UTF-8 写出并附带 .cpg 声明")
-	return res, nil
+		Warnings: warnings,
+	}, nil
 }
 
 // putF64 以小端写入 float64。
@@ -863,15 +878,16 @@ func exportGeoPackage(name string, feats []FileFeature, srid int) (*ExportResult
 		os.RemoveAll(tmpDir)
 		return nil, fmt.Errorf("vector: 关闭 GeoPackage 失败: %w", err)
 	}
-	res := &ExportResult{
+	// 不在这里加"二维/WKB"之类的常规说明：那条提示每次都会出现，属于噪音。
+	// Warnings 只承载**真正的损失**（跳过的要素、被截断的字段名），
+	// 保证前端弹出来的每一条都值得用户看一眼。
+	return &ExportResult{
 		Filename: name + ".gpkg",
 		MimeType: "application/geopackage+sqlite3",
 		Path:     path,
 		TempDir:  tmpDir,
 		Features: len(feats),
-	}
-	res.Warnings = append(res.Warnings, "几何以 WKB 写出（二维，Z/M 信息不保留）")
-	return res, nil
+	}, nil
 }
 
 // gpkgGeomTypeName 依数据推断 GeoPackage 的几何类型名。

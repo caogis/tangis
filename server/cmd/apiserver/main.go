@@ -253,6 +253,8 @@ func main() {
 		"vector":        vectorServer != nil,
 		"wfs":           vectorServer != nil,
 		"mvt":           vectorServer != nil,
+		// 本机目录浏览（建任务选路径）：TANGIS_FS_BROWSE=off 关闭
+		"fs_browse": cfg.FSBrowse,
 	}
 
 	router := api.NewRouter(store, publisher, services, api.AuthOptions{
@@ -274,6 +276,9 @@ func main() {
 		Interrupter: taskWorker,
 		// F-21 合规同步算子（坐标系识别 / 七参数）
 		KernelBin: os.Getenv("KERNEL_BIN"),
+		// 本机目录浏览（建任务选路径）
+		FSBrowseEnabled: cfg.FSBrowse,
+		FSBrowseRoots:   cfg.FSRoots,
 		Runtime: api.RuntimeInfo{
 			Mode:         config.ModeServer,
 			Version:      api.Version,

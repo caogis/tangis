@@ -111,6 +111,33 @@ export interface SystemInfo {
   capabilities: Record<string, boolean>
 }
 
+/** 目录浏览条目（GET /api/v1/fs/browse；服务端本机路径，非浏览器本地） */
+export interface FsEntry {
+  name: string
+  /** 绝对路径，可直接回填任务表单 */
+  path: string
+  is_dir: boolean
+  /** 文件字节数；目录为 0 */
+  size: number
+}
+
+/** 目录浏览结果（GET /api/v1/fs/browse） */
+export interface FsBrowseResult {
+  /** 当前目录；顶层（根/盘符/白名单根）为空串 */
+  path: string
+  /** 上一级目录；已在顶层为空串 */
+  parent: string
+  /** 当前目录是否可写（输出目录选择提示） */
+  writable: boolean
+  /** 条目数达到上限被截断 */
+  truncated: boolean
+  /** TANGIS_FS_ROOTS 白名单根；未配置时为 null */
+  roots: string[] | null
+  /** 服务端系统（darwin/linux/windows） */
+  os: string
+  entries: FsEntry[]
+}
+
 /** 上传结果（POST /api/v1/uploads）：root 可直接作为任务 source */
 export interface UploadResult {
   uploadId: string

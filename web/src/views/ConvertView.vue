@@ -5,9 +5,10 @@
  */
 import { computed, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { createTask, listTasks } from '../api/client'
+import { createTask, getSystemInfo, listTasks } from '../api/client'
 import type { Task } from '../api/types'
 import AppIcon from '../components/AppIcon.vue'
+import PathPickerDialog from '../components/PathPickerDialog.vue'
 import StatusBadge from '../components/StatusBadge.vue'
 import { useToast } from '../composables/useToast'
 
@@ -32,6 +33,10 @@ interface Line {
   accept: string
   status: LineStatus
   icon: 'convert' | 'import' | 'globe'
+  /** 源数据形态：目录（OSGB）还是单个文件（影像/DEM/LAS/OBJ） */
+  srcKind: 'dir' | 'file'
+  /** srcKind=file 时路径选择器展示的后缀（首个后缀用于内核校验提示） */
+  srcExts?: string[]
   params: ParamDef[]
 }
 
@@ -43,6 +48,7 @@ const LINES: Line[] = [
     accept: 'OSGB 目录（含 Tile_*.osgb）',
     status: 'ready',
     icon: 'convert',
+    srcKind: 'dir',
     params: [
       { key: 'origin', label: '地理原点（经度,纬度,高程）', kind: 'text', ph: '116.39,39.90,0', hint: '写入 root.transform，使模型落到真实地理位置' },
       { key: 'simplify', label: '轻量化比例', kind: 'range', min: 0.1, max: 1, step: 0.1, def: 0.5, hint: '1.0 不简化；QEM 简化并保留瓦片接缝' },
@@ -56,6 +62,8 @@ const LINES: Line[] = [
     accept: '.tif / .tiff',
     status: 'ready',
     icon: 'globe',
+    srcKind: 'file',
+    srcExts: ['.tif', '.tiff'],
     // 层级由内核按源分辨率自动推导（内核 raster2tiles 不接收层级参数），
     // 故此处不提供无效表单项，避免"填了没效果"。
     params: [],
@@ -67,6 +75,8 @@ const LINES: Line[] = [
     accept: '.obj（及同目录贴图）',
     status: 'ready',
     icon: 'convert',
+    srcKind: 'file',
+    srcExts: ['.obj'],
     params: [{ key: 'origin', label: '地理原点（经度,纬度,高程）', kind: 'text', ph: '116.39,39.90,0' }],
   },
   {
@@ -78,6 +88,8 @@ const LINES: Line[] = [
     accept: '.tif（单波段 DEM）',
     status: 'ready',
     icon: 'globe',
+    srcKind: 'file',
+    srcExts: ['.tif', '.tiff'],
     params: [
       { key: 'min_zoom', label: '最小层级', kind: 'number', ph: '0', hint: '留空由内核按分辨率推导' },
       { key: 'max_zoom', label: '最大层级', kind: 'number', ph: '15' },
@@ -90,6 +102,8 @@ const LINES: Line[] = [
     accept: '.las（LAS 1.0–1.4；LAZ 暂不支持）',
     status: 'ready',
     icon: 'convert',
+    srcKind: 'file',
+    srcExts: ['.las'],
     params: [
       {
         key: 'origin',
@@ -119,6 +133,32 @@ const values = ref<Record<string, string | boolean | number>>({})
 const submitting = ref(false)
 const errorMsg = ref('')
 const recent = ref<Task[]>([])
+/** 后端是否开放本机目录浏览（capabilities.fs_browse）；关闭时不显示选择入口 */
+const fsBrowse = ref(false)
+
+/** 路径选择器：'source' 选源数据（目录或文件），'output' 选输出目录 */
+const picker = ref<'source' | 'output' | null>(null)
+const pickerStart = ref('')
+
+function openPicker(target: 'source' | 'output'): void {
+  const raw = (target === 'source' ? source.value : output.value).trim()
+  // 文件类线路：现有值是一个文件路径，选择器应停在它所在目录
+  const start = target === 'source' && line.value.srcKind === 'file' ? dirOf(raw) : raw
+  pickerStart.value = raw ? start : ''
+  picker.value = target
+}
+
+function onPick(path: string): void {
+  if (picker.value === 'source') source.value = path
+  else if (picker.value === 'output') output.value = path
+  picker.value = null
+}
+
+/** 取路径的父目录（兼容 / 与 \ 两种分隔符） */
+function dirOf(p: string): string {
+  const i = Math.max(p.lastIndexOf('/'), p.lastIndexOf('\\'))
+  return i > 0 ? p.slice(0, i) : p
+}
 
 const line = computed(() => LINES.find((l) => l.id === selectedId.value) ?? LINES[0]!)
 const canSubmit = computed(() => line.value.status === 'ready' && source.value.trim().length > 0 && !submitting.value)
@@ -199,6 +239,12 @@ onMounted(async () => {
   } catch {
     /* 历史失败不阻塞创建 */
   }
+  try {
+    fsBrowse.value = (await getSystemInfo()).capabilities.fs_browse === true
+  } catch {
+    /* 后端不可达或版本较旧：退回手填路径 */
+    fsBrowse.value = false
+  }
 })
 </script>
 
@@ -249,14 +295,26 @@ onMounted(async () => {
             <label class="label">源数据路径</label>
             <div class="row">
               <input v-model="source" class="input mono" :placeholder="`本机路径，例：${line.accept}`" />
+              <button v-if="fsBrowse" type="button" class="btn btn-sm" @click="openPicker('source')">
+                <AppIcon name="folder" :size="12" />
+                选择
+              </button>
               <button type="button" class="btn btn-sm" @click="useSample">示例</button>
             </div>
-            <span class="hint">直接读取本机路径，不上传文件内容</span>
+            <span class="hint">
+              {{ fsBrowse ? '可点「选择」浏览本机目录，也可直接填写' : '直接读取本机路径，不上传文件内容' }}
+            </span>
           </div>
 
           <div class="field">
             <label class="label">输出目录（可留空）</label>
-            <input v-model="output" class="input mono" placeholder="留空则自动分配到数据目录 outputs/ 下" />
+            <div class="row">
+              <input v-model="output" class="input mono" placeholder="留空则自动分配到数据目录 outputs/ 下" />
+              <button v-if="fsBrowse" type="button" class="btn btn-sm" @click="openPicker('output')">
+                <AppIcon name="folder" :size="12" />
+                选择
+              </button>
+            </div>
           </div>
 
           <template v-if="line.params.length > 0">
@@ -323,6 +381,17 @@ onMounted(async () => {
         </div>
       </div>
     </div>
+
+    <PathPickerDialog
+      :open="picker !== null"
+      :title="picker === 'output' ? '选择输出目录' : '选择源数据路径'"
+      :kind="picker === 'output' ? 'dir' : line.srcKind"
+      :exts="picker === 'output' ? undefined : line.srcExts"
+      :initial-path="pickerStart"
+      :confirm-text="picker === 'output' ? '用这个目录' : undefined"
+      @pick="onPick"
+      @close="picker = null"
+    />
 
     <div v-if="recent.length > 0" class="panel recent">
       <div class="panel-head"><span class="panel-title">最近任务</span></div>

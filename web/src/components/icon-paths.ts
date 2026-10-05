@@ -7,7 +7,7 @@ export type IconName =
   | 'services' | 'globe' | 'tasks' | 'settings'
   | 'sun' | 'moon' | 'check' | 'alert' | 'close' | 'refresh'
   | 'copy' | 'external' | 'play' | 'pause' | 'trash' | 'chevron-right' | 'search' | 'layers' | 'edition'
-  | 'shield'
+  | 'shield' | 'folder' | 'file' | 'arrow-up' | 'plus'
 
 export const ICON_PATHS: Record<IconName, string> = {
   dashboard: 'M3 3h7v7H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 14h7v7H3z',
@@ -36,4 +36,9 @@ export const ICON_PATHS: Record<IconName, string> = {
   layers: 'M12 3l9 5-9 5-9-5zM3 13l9 5 9-5M3 17l9 5 9-5',
   edition: 'M12 15a4 4 0 100-8 4 4 0 000 8zM8.5 14L6 21l6-3 6 3-2.5-7',
   shield: 'M12 3l7 3v6c0 4-3 7-7 9-4-2-7-5-7-9V6z',
+  // 路径选择器（目录浏览）
+  folder: 'M3 7a2 2 0 012-2h4l2 2h8a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z',
+  file: 'M14 3H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V8zM14 3v5h5',
+  'arrow-up': 'M12 19V5M6 11l6-6 6 6',
+  plus: 'M12 5v14M5 12h14',
 }

@@ -1,0 +1,98 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e7]: TanGIS
+      - generic [ref=e8]: v0.1
+    - generic [ref=e10]: 矢量数据
+    - generic [ref=e11]:
+      - generic "服务进程" [ref=e12]: 服务在线
+      - generic "进行中的切片任务" [ref=e14]:
+        - text: 活动任务
+        - generic [ref=e16]: "0"
+    - button "切换到深色主题" [ref=e17] [cursor=pointer]
+  - generic [ref=e20]:
+    - complementary [ref=e21]:
+      - navigation [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: 总览
+          - link "工作台" [ref=e25] [cursor=pointer]:
+            - /url: /
+        - generic [ref=e29]:
+          - generic [ref=e30]: 数据
+          - link "数据导入" [ref=e31] [cursor=pointer]:
+            - /url: /import
+          - link "矢量数据" [ref=e35] [cursor=pointer]:
+            - /url: /vector
+        - generic [ref=e39]:
+          - generic [ref=e40]: 处理
+          - link "切片转换" [ref=e41] [cursor=pointer]:
+            - /url: /convert
+          - link "数据质检" [ref=e45] [cursor=pointer]:
+            - /url: /qc
+          - link "合规工具" [ref=e49] [cursor=pointer]:
+            - /url: /compliance
+          - link "模型编辑" [ref=e53] [cursor=pointer]:
+            - /url: /edit
+        - generic [ref=e57]:
+          - generic [ref=e58]: 服务
+          - link "服务分发" [ref=e59] [cursor=pointer]:
+            - /url: /services
+          - link "三维预览" [ref=e63] [cursor=pointer]:
+            - /url: /preview
+        - generic [ref=e67]:
+          - generic [ref=e68]: 系统
+          - link "任务中心" [ref=e69] [cursor=pointer]:
+            - /url: /tasks
+          - link "系统设置" [ref=e73] [cursor=pointer]:
+            - /url: /settings
+          - link "版本对照" [ref=e77] [cursor=pointer]:
+            - /url: /edition
+    - main [ref=e81]:
+      - generic [ref=e82]:
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - heading "编辑：districts" [level=1] [ref=e85]
+            - paragraph [ref=e86]: 面图层 · 2 个要素 · 待保存 0
+          - generic [ref=e87]:
+            - button "重新载入" [ref=e88] [cursor=pointer]
+            - button "保存" [disabled] [ref=e91]
+            - button "返回" [ref=e92] [cursor=pointer]
+        - generic [ref=e93]:
+          - generic [ref=e94]:
+            - button "平移" [ref=e95] [cursor=pointer]
+            - button "选择" [ref=e99] [cursor=pointer]
+            - button "画点" [ref=e103] [cursor=pointer]
+            - button "画线" [ref=e107] [cursor=pointer]
+            - button "画面" [ref=e111] [cursor=pointer]
+            - button "撤销" [disabled] [ref=e116]
+            - button "删除" [disabled] [ref=e120]
+            - button "全图" [ref=e124] [cursor=pointer]
+          - generic [ref=e128]:
+            - generic: 点选要素后可改形状与属性
+            - generic: —
+          - complementary [ref=e130]:
+            - generic [ref=e131]:
+              - generic [ref=e132]:
+                - generic [ref=e133]: 要素属性
+                - generic [ref=e134]: 未选中
+              - generic [ref=e135]:
+                - text: 在画布上点选一个要素
+                - generic [ref=e136]: 选中后可改属性、拖动顶点改形状
+            - generic [ref=e137]:
+              - generic [ref=e138]: 操作提示
+              - generic [ref=e140]:
+                - paragraph [ref=e141]: 滚轮缩放 · 平移工具下拖拽移动画布
+                - paragraph [ref=e142]: 画线/画面：依次单击加点，双击或回车结束，Esc 取消
+                - paragraph [ref=e143]: 选择工具：拖动顶点改形状，拖动要素内部整体移动
+                - paragraph [ref=e144]: 属性键名留空或重复不会被保存
+                - paragraph [ref=e145]:
+                  - text: 保存会**就地写回源文件**；服务端首次编辑前会自动备份为
+                  - code [ref=e146]: <文件名>.orig
+                  - text: 。
+  - contentinfo [ref=e147]:
+    - generic [ref=e148]: © 2026 武汉草果科技有限公司 · TanGIS 新一代 GIS 数据处理与分发平台
+    - generic [ref=e149]:
+      - link "社区版" [ref=e150]:
+        - /url: /edition
+      - link "版本功能对照" [ref=e151] [cursor=pointer]:
+        - /url: /edition

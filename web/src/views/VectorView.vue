@@ -10,6 +10,7 @@
  *   2) 直接填本机绝对路径 → POST /vector/files（免拷贝，适合大文件）
  */
 import { computed, nextTick, onMounted, ref } from 'vue'
+import { RouterLink } from 'vue-router'
 import {
   deleteVectorLayer,
   exportVectorLayer,
@@ -656,6 +657,15 @@ function geomLabel(t: string): string {
             </div>
 
             <div class="urls">
+              <div class="url-row">
+                <span class="url-label">编辑</span>
+                <div class="export-btns">
+                  <RouterLink class="btn btn-sm" :to="`/vector/${selected.name}/edit`">
+                    <AppIcon name="edit" :size="12" /> 打开编辑器
+                  </RouterLink>
+                  <span class="export-note">就地写回源文件，首次编辑前自动备份</span>
+                </div>
+              </div>
               <div class="url-row">
                 <span class="url-label">导出</span>
                 <div class="export-btns">

@@ -144,12 +144,42 @@ func (h *Handler) ExportVectorLayer(c *gin.Context) {
 	}
 
 	if res.Path != "" {
+		// 先显式声明类型：http.ServeContent 只在未设置时才嗅探，
+		// 否则 .gpkg 会被识别成 application/octet-stream
+		c.Header("Content-Type", res.MimeType)
 		c.FileAttachment(res.Path, res.Filename)
 		return
 	}
 	c.Header("Content-Disposition",
 		fmt.Sprintf("attachment; filename=%q", res.Filename))
 	c.Data(http.StatusOK, res.MimeType, res.Data)
+}
+
+// ApplyVectorEdits POST /api/v1/vector/layers/{name}/edits — 图层要素增删改（就地写回）。
+//
+// 请求体：{ops:[{op:"create"|"update"|"delete", id?, geometry?, properties?},…]}
+//
+// 写回策略按源格式自动选择：GeoJSON 整体重写、GeoPackage 只改目标表（同库其它表
+// 不受影响）、Shapefile 重写文件族。**首次编辑前自动备份源文件**（`<文件名>.orig`），
+// 备份路径随结果返回。几何类型不符（如往面图层画点）会被明确拒绝。
+func (h *Handler) ApplyVectorEdits(c *gin.Context) {
+	if h.Vector == nil {
+		c.JSON(http.StatusServiceUnavailable, gin.H{"error": "vector service not configured"})
+		return
+	}
+	var req struct {
+		Ops []vector.EditOp `json:"ops"`
+	}
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid JSON body: " + err.Error()})
+		return
+	}
+	res, err := h.Vector.ApplyEdits(c.Request.Context(), c.Param("name"), req.Ops)
+	if err != nil {
+		writeVectorErr(c, err)
+		return
+	}
+	c.JSON(http.StatusOK, res)
 }
 
 // ListVectorSources GET /api/v1/vector/sources — 数据源列表（DSN 打码回显）。

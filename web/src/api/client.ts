@@ -1,5 +1,7 @@
 import type {
   EditTaskPayload,
+  FsBrowseResult,
+  FsEntry,
   GeoJsonFeatureCollection,
   NewTaskPayload,
   QcStatus,
@@ -392,7 +394,9 @@ export async function exportVectorLayer(
     .filter(Boolean)
     .map((s) => {
       try {
-        return decodeURIComponent(s)
+        // 服务端用 url.QueryEscape（表单式编码）：空格编码成 '+'，
+        // 而 decodeURIComponent 只认 %20，这里先把 '+' 还原成空格
+        return decodeURIComponent(s.replace(/\+/g, ' '))
       } catch {
         return s
       }
@@ -505,6 +509,59 @@ export function uploadFiles(
     xhr.onabort = () => reject(new ApiError('上传已取消'))
     xhr.send(form)
   })
+}
+
+/* ------------------------------------------------------------------ */
+/* 本机目录浏览（建任务选路径，替代手填）                                */
+/* ------------------------------------------------------------------ */
+
+function normalizeFsEntry(raw: Record<string, unknown>): FsEntry {
+  return {
+    name: pickStr(raw, 'name'),
+    path: pickStr(raw, 'path'),
+    is_dir: raw.is_dir === true || raw.isDir === true,
+    size: pickNum(raw, 'size'),
+  }
+}
+
+/**
+ * 列举服务端本机目录（GET /api/v1/fs/browse）。
+ *
+ * 注意：浏览的是**服务端（或桌面版所在机器）**的文件系统，与浏览器本地无关。
+ * kind=dir 只列目录；file 列目录 + 按 ext 过滤的文件；缺省 path 返回顶层。
+ */
+export async function browseFs(opts: {
+  path?: string
+  kind?: 'dir' | 'file' | 'any'
+  ext?: string
+} = {}): Promise<FsBrowseResult> {
+  const q = new URLSearchParams()
+  if (opts.path) q.set('path', opts.path)
+  if (opts.kind) q.set('kind', opts.kind)
+  if (opts.ext) q.set('ext', opts.ext)
+  const raw = await request<Record<string, unknown>>(`/api/v1/fs/browse?${q.toString()}`)
+  const list = Array.isArray(raw.entries) ? (raw.entries as Record<string, unknown>[]) : []
+  const roots = Array.isArray(raw.roots) ? (raw.roots as unknown[]).map((v) => String(v)) : null
+  return {
+    path: pickStr(raw, 'path'),
+    parent: pickStr(raw, 'parent'),
+    writable: raw.writable === true,
+    truncated: raw.truncated === true,
+    roots: roots && roots.length > 0 ? roots : null,
+    os: pickStr(raw, 'os'),
+    entries: list
+      .filter((e): e is Record<string, unknown> => e != null && typeof e === 'object')
+      .map(normalizeFsEntry),
+  }
+}
+
+/** 新建一层目录（POST /api/v1/fs/mkdir），返回新建目录的绝对路径。 */
+export async function mkdirFs(parent: string, name: string): Promise<string> {
+  const raw = await request<Record<string, unknown>>('/api/v1/fs/mkdir', {
+    method: 'POST',
+    body: JSON.stringify({ path: parent, name }),
+  })
+  return pickStr(raw, 'path')
 }
 
 /* ------------------------------------------------------------------ */
@@ -733,6 +790,73 @@ export function vectorWfsFeatureUrl(
   if (opts?.bbox) q.set('bbox', opts.bbox.map((v) => v.toFixed(6)).join(','))
   if (opts?.count) q.set('count', String(opts.count))
   return `${API_BASE}/api/v1/wfs?${q.toString()}`
+}
+
+/* ------------------------------------------------------------------ */
+/* 矢量编辑（就地写回）                                                */
+/* ------------------------------------------------------------------ */
+
+/** 单条编辑操作（与后端 EditOp 对应） */
+export interface VectorEditOp {
+  op: 'create' | 'update' | 'delete'
+  /** 目标要素 ID（update / delete 必填） */
+  id?: number
+  /** GeoJSON 几何对象（create 必填） */
+  geometry?: unknown
+  /** 属性字典（update 时**整体替换**） */
+  properties?: Record<string, unknown>
+}
+
+/** 编辑结果 */
+export interface VectorEditResult {
+  created: number
+  updated: number
+  deleted: number
+  total: number
+  /** 新建要素的 ID（与请求里 create 顺序一致） */
+  newIds: number[]
+  /** 源文件备份路径（首次编辑时建立） */
+  backup?: string
+  warnings: string[]
+}
+
+/**
+ * 拉取图层**全量**要素（走导出接口）。
+ *
+ * 编辑器要"改哪条提交哪条"，就必须先拿到完整要素集；WFS GetFeature 受
+ * server 端 count 上限约束（默认 10000），拿不全会导致差集算出错误的删除，
+ * 因此这里复用导出接口。
+ */
+export async function fetchVectorLayerGeoJSON(layer: string): Promise<GeoJsonFeatureCollection> {
+  const res = await fetchWithAuth(
+    `/api/v1/vector/layers/${encodeURIComponent(layer)}/export?format=geojson`,
+  )
+  return (await res.json()) as GeoJsonFeatureCollection
+}
+
+/**
+ * 应用图层要素编辑（就地写回数据源）。
+ *
+ * 首次编辑前服务端会自动备份源文件（路径在结果里回显）——编辑不可逆，
+ * 调用方应当把 backup 告诉用户。
+ */
+export async function applyVectorLayerEdits(
+  layer: string,
+  ops: VectorEditOp[],
+): Promise<VectorEditResult> {
+  const raw = await request<Record<string, unknown>>(
+    `/api/v1/vector/layers/${encodeURIComponent(layer)}/edits`,
+    { method: 'POST', body: JSON.stringify({ ops }) },
+  )
+  return {
+    created: pickNum(raw, 'created'),
+    updated: pickNum(raw, 'updated'),
+    deleted: pickNum(raw, 'deleted'),
+    total: pickNum(raw, 'total'),
+    newIds: Array.isArray(raw.new_ids) ? (raw.new_ids as unknown[]).map((v) => Number(v)) : [],
+    backup: pickStr(raw, 'backup') || undefined,
+    warnings: pickStrArr(raw, 'warnings'),
+  }
 }
 
 /** 拉取图层要素（GeoJSON FeatureCollection），供列表预览绘制 */

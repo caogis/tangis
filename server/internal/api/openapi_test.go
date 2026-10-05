@@ -19,6 +19,8 @@ import (
 // *path → {path}）。
 var specPaths = []string{
 	"/healthz",
+	"/api/v1/fs/browse",
+	"/api/v1/fs/mkdir",
 	"/api/v1/tasks",
 	"/api/v1/tasks/import",
 	"/api/v1/tasks/{id}",

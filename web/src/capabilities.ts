@@ -35,6 +35,7 @@ export const CAPABILITIES: Capability[] = [
   { module: '数据导入', name: 'GeoPackage 矢量', status: 'ready', note: '复用桌面版自带的纯 Go SQLite 驱动；一个文件内的每个要素表各注册一个图层' },
   { module: '数据导入', name: '投影坐标自动换算', status: 'ready', note: '高斯克吕格/横轴墨卡托按 .prj 参数反算到 WGS84；基准不同且无 TOWGS84 时明确拒绝而非静默近似' },
   { module: '数据导入', name: '矢量导出', status: 'ready', note: 'GeoPackage / Shapefile(.zip) / GeoJSON；Shapefile 的有损处理（混合几何、字段名截断）会明确提示' },
+  { module: '数据导入', name: '矢量编辑', status: 'ready', note: '画布绘制/顶点拖动/加点删点/属性编辑，顶点吸附到精确坐标；就地写回源文件（首次编辑前自动备份）' },
   { module: '数据导入', name: 'LAS / LAZ 点云', status: 'partial', note: 'LAS 1.0–1.4 可切片为 3D Tiles 点云（pnts）；LAZ 暂不支持' },
   { module: '数据导入', name: 'DXF / DWG', status: 'planned', note: 'DXF 优先；DWG 走 ODA 商业授权' },
 

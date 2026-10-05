@@ -110,8 +110,11 @@ func TestExportShapefileRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("exportShapefile: %v", err)
 	}
-	if res.Skipped != 0 || len(res.Warnings) == 0 {
-		t.Errorf("Skipped=%d warnings=%v", res.Skipped, res.Warnings)
+	if res.Skipped != 0 {
+		t.Errorf("Skipped=%d, want 0（数据本身几何类型一致）", res.Skipped)
+	}
+	if len(res.Warnings) != 0 {
+		t.Errorf("无损失时不应有警告（避免噪音）: %v", res.Warnings)
 	}
 	dir := unzipToTemp(t, res.Data)
 	shp := filepath.Join(dir, "blocks.shp")

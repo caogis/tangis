@@ -80,6 +80,14 @@ type Handler struct {
 	// KernelBin 内核可执行文件路径，供合规同步算子（crs-identify / bursa）
 	// 直接调用；空则退回仓库内 debug 构建（仅便于本地开发）。
 	KernelBin string
+
+	// ---- 本机目录浏览（建任务选路径） ----
+	// FSBrowseEnabled 是否启用 GET /fs/browse 与 POST /fs/mkdir
+	//（env TANGIS_FS_BROWSE=off 关闭；关闭时端点 404）。
+	FSBrowseEnabled bool
+	// FSBrowseRoots 允许浏览的根目录白名单（env TANGIS_FS_ROOTS 逗号分隔），
+	// 空=不限制（桌面单机版本机使用即默认语义）。
+	FSBrowseRoots []string
 }
 
 // LogPath 任务内核日志的本地路径（与 worker 侧约定一致：data/logs/{id}.log）。

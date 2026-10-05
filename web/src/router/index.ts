@@ -9,6 +9,11 @@ const router = createRouter({
     // 数据
     { path: '/import', name: 'import', component: () => import('../views/ImportView.vue') },
     { path: '/vector', name: 'vector', component: () => import('../views/VectorView.vue') },
+    {
+      path: '/vector/:name/edit',
+      name: 'vector-edit',
+      component: () => import('../views/VectorEditView.vue'),
+    },
 
     // 处理
     { path: '/convert', name: 'convert', component: () => import('../views/ConvertView.vue') },

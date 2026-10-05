@@ -180,6 +180,9 @@ func Run(cfg *config.Config, lic *license.Checker) error {
 		Interrupter: w,
 		// F-21 合规同步算子（坐标系识别 / 七参数）复用同一内核
 		KernelBin: w.KernelBin,
+		// 本机目录浏览（建任务选路径）
+		FSBrowseEnabled: cfg.FSBrowse,
+		FSBrowseRoots:   cfg.FSRoots,
 		Runtime: api.RuntimeInfo{
 			Mode:        config.ModeDesktop,
 			Version:     api.Version,
@@ -213,6 +216,8 @@ func Run(cfg *config.Config, lic *license.Checker) error {
 				"vector": vectorServer != nil,
 				"wfs":    vectorServer != nil,
 				"mvt":    vectorServer != nil,
+				// 本机目录浏览（建任务选路径）：桌面版即本机使用，默认开放
+				"fs_browse": cfg.FSBrowse,
 			},
 		},
 	}, tileCache)

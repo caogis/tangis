@@ -54,6 +54,77 @@ paths:
                 properties:
                   status: { type: string, example: "ok" }
 
+  /api/v1/fs/browse:
+    get:
+      tags: [system]
+      summary: 列举服务端本机目录（建任务选路径，替代手填）
+      description: |
+        建任务的 source / output 都是**服务端本机路径**，本端点供前端路径选择器
+        逐级浏览；只返回目录名与文件名，不返回任何文件内容。
+        path 为空时返回顶层：配置 TANGIS_FS_ROOTS 时为白名单根，Windows 为盘符
+        列表，其它为 "/"。kind=dir 只列目录；file 列目录 + 按 ext 过滤的文件；
+        any 不过滤。以 . 开头的隐藏项一律不展示，单目录条目上限 2000（truncated=true）。
+        TANGIS_FS_BROWSE=off（或路径越出白名单）时分别为 404 / 403。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+        - name: path
+          in: query
+          required: false
+          schema: { type: string }
+          description: 目录绝对路径；空=顶层
+        - name: kind
+          in: query
+          required: false
+          schema: { type: string, enum: [dir, file, any], default: dir }
+        - name: ext
+          in: query
+          required: false
+          schema: { type: string }
+          description: 逗号分隔后缀（.tif,.tiff），仅 kind=file 时过滤文件
+      responses:
+        "200":
+          description: 目录条目
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/FsBrowseResult" }
+        "400": { description: kind 非法，或 path 指向的不是目录 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { description: 非 admin key，或路径越出 TANGIS_FS_ROOTS 白名单 }
+        "404": { description: 路径不存在，或 TANGIS_FS_BROWSE=off }
+
+  /api/v1/fs/mkdir:
+    post:
+      tags: [system]
+      summary: 新建目录（输出目录不存在时免手工创建）
+      description: |
+        只建一层，name 含分隔符或为 . / .. 时 400；父目录同样受
+        TANGIS_FS_ROOTS 白名单约束。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path, name]
+              properties:
+                path: { type: string, description: 父目录绝对路径 }
+                name: { type: string, description: 待建子目录名（单层） }
+      responses:
+        "201":
+          description: 已创建
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  path: { type: string }
+        "400": { description: name 非法或创建失败（已存在/无权限） }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { description: 非 admin key，或路径越出白名单 }
+        "404": { description: TANGIS_FS_BROWSE=off }
+
   /api/v1/tasks:
     get:
       tags: [tasks]
@@ -857,6 +928,49 @@ paths:
         "401": { $ref: "#/components/responses/Unauthorized" }
         "404": { $ref: "#/components/responses/NotFound" }
 
+  /api/v1/vector/layers/{name}/edits:
+    post:
+      tags: [vector]
+      summary: 图层要素编辑（就地写回数据源）
+      description: |
+        对已注册图层应用要素增删改，按源格式自动选择写回策略：
+
+        - **GeoJSON**：整体重写源文件（原子替换：临时文件 + rename）
+        - **GeoPackage**：只对目标要素表做 SQL 增删改，**同库其它表不受影响**
+        - **Shapefile**：重写 `.shp/.shx/.dbf/.prj/.cpg` 文件族
+
+        **首次编辑前自动备份源文件**（`<文件名>.orig`，只备份一次，后续编辑不会覆盖），
+        备份路径在响应 `backup` 字段返回——编辑不可逆，必须留退路。
+
+        `update` 的 `properties` 是**整体替换**（提交完整属性字典）；`create` 的
+        `id` 由服务端分配并回显在 `new_ids`。未知属性键不会擅自改表结构，会被忽略并
+        在 `warnings` 里说明。
+
+        几何类型必须与图层一致（Shapefile / GeoPackage 都是单几何类型存储），
+        往面图层画点会返回 400 而不是写出非法文件。
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+          description: 图层名
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/VectorEditsReq" }
+      responses:
+        "200":
+          description: 编辑结果（含备份路径）
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/VectorEditsResult" }
+        "400": { description: 操作非法、几何缺失或类型不符、单次操作过多 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { description: 图层或要素不存在 }
+        "503": { description: 矢量能力未装配，或数据源不支持编辑（PostGIS） }
+
   /api/v1/vector/layers/{name}/export:
     get:
       tags: [vector]
@@ -1089,6 +1203,65 @@ components:
           description: |
             能力开关。false 表示"当前模式下不可用"（wms/wcs/terrain 尚未实现；
             vector/wfs/mvt 在桌面单机版未装配），前端据此灰显而非点了才报错。
+
+    FsEntry:
+      type: object
+      properties:
+        name: { type: string }
+        path: { type: string, description: 绝对路径，可直接回填表单 }
+        is_dir: { type: boolean }
+        size: { type: integer, format: int64, description: 文件字节数；目录为 0 }
+    FsBrowseResult:
+      type: object
+      properties:
+        path: { type: string, description: 当前目录；顶层为空串 }
+        parent: { type: string, description: 上一级目录；已在顶层为空串 }
+        writable: { type: boolean, description: 当前目录是否可写 }
+        truncated: { type: boolean, description: 条目数达到上限被截断 }
+        roots:
+          type: array
+          items: { type: string }
+          description: TANGIS_FS_ROOTS 白名单根；未配置时为 null
+        os: { type: string, example: darwin }
+        entries:
+          type: array
+          items: { $ref: "#/components/schemas/FsEntry" }
+
+    VectorEditsReq:
+      type: object
+      required: [ops]
+      properties:
+        ops:
+          type: array
+          maxItems: 10000
+          items:
+            type: object
+            required: [op]
+            properties:
+              op: { type: string, enum: [create, update, delete] }
+              id: { type: integer, description: 目标要素 ID（update/delete 必填） }
+              geometry: { type: object, description: "GeoJSON 几何对象（create 必填）" }
+              properties:
+                type: object
+                additionalProperties: true
+                description: 属性字典（update 时整体替换）
+
+    VectorEditsResult:
+      type: object
+      properties:
+        created: { type: integer }
+        updated: { type: integer }
+        deleted: { type: integer }
+        total: { type: integer, description: 编辑后图层要素总数 }
+        new_ids:
+          type: array
+          items: { type: integer }
+          description: 新建要素的 ID（与请求中 create 的顺序一致）
+        backup: { type: string, description: 源文件备份路径（首次编辑时建立） }
+        warnings:
+          type: array
+          items: { type: string }
+          description: 需要用户知道的取舍（被忽略的属性键等）
 
     UploadResult:
       type: object
