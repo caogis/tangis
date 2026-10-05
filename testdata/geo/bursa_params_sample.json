@@ -1,0 +1,14 @@
+{
+  "source": "CGCS2000",
+  "target": "WGS 84",
+  "dx": 0.0,
+  "dy": 0.0,
+  "dz": 4.5,
+  "rx": 0.0,
+  "ry": 0.0,
+  "rz": -0.554,
+  "scale_ppm": 0.219,
+  "convention": "position_vector",
+  "source_ellipsoid": { "a": 6378135.0, "inv_f": 298.26 },
+  "target_ellipsoid": { "a": 6378137.0, "inv_f": 298.257223563 }
+}

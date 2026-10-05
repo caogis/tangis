@@ -1,0 +1,1209 @@
+# TanGIS Server REST API — OpenAPI 3.0 规范（M2-F14）
+#
+# 按代码现状如实梳理（internal/api/router.go 为唯一事实来源）；
+# 不确定的字段以「待确认」注释标注，不编造。
+# 防漂移：server/internal/api/openapi_test.go 断言本文件路径集合与
+# gin 路由表一致，改路由须同步改本文件。
+openapi: 3.0.3
+info:
+  title: TanGIS Server API
+  description: |
+    TanGIS 开源 GIS 平台服务端：三维切片/转换任务（3DTiles/影像瓦片）、
+    .t3d 打包与导入、发布审批、OGC 分发（WMTS/TMS/WFS）、矢量 MVT 发布（PostGIS → MVT）。
+
+    鉴权（F-06）：
+    - 管理接口（/api/v1 下非瓦片/分发路径）要求 `X-API-Key` 请求头；多 Key 表
+      （M2-F14）支持 {name, role(admin/tenant), daily_task_limit, disabled}，
+      disabled key 返回 403。tenant 角色且 daily_task_limit>0 的 key 创建任务
+      超每日配额返回 429 + Retry-After（UTC 日重置）。
+    - 瓦片/分发路径（WMTS/TMS/3DTiles/MVT/WFS/package）接受 `X-API-Key`
+      或防盗链签名 URL（`expires` + `sig` 查询参数，HMAC-SHA256）任一。
+    - `TANGIS_AUTH=off` 时全部放行（仅开发兼容，按 admin 处理）。
+
+    商业授权（F-15）：`POST /tasks` 的 `params.distributed=true` 需有效 License
+    （env TANGIS_LICENSE_FILE），否则 403；无独立 License REST 端点。
+
+    Webhook（F-14）：无独立配置端点；任务 `params.webhook_url`（或导入表单
+    `webhook_url` 字段）在任务终态时触发 HMAC 签名 POST 通知。
+  version: 2.14.0
+servers:
+  - url: http://127.0.0.1:8080
+    description: 本地开发（默认端口 PORT=8080）
+tags:
+  - name: system
+  - name: tasks
+  - name: services
+  - name: ogc
+  - name: vector
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /healthz:
+    get:
+      tags: [system]
+      summary: 存活探针（无鉴权，容器编排用）
+      security: []
+      responses:
+        "200":
+          description: 服务存活
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: "ok" }
+
+  /api/v1/tasks:
+    get:
+      tags: [tasks]
+      summary: 任务列表（按租户隔离；admin 可见全部）
+      description: 结果走短 TTL 缓存（TANGIS_LIST_CACHE_TTL，默认 5s），响应带 X-Cache 头。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 任务列表
+          headers:
+            X-Cache:
+              schema: { type: string, enum: [HIT, MISS] }
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tasks:
+                    type: array
+                    items: { $ref: "#/components/schemas/Task" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [tasks]
+      summary: 创建切片/转换任务
+      description: |
+        落库后发布 NATS 驱动 Worker；队列不可用时优雅降级（任务保持 PENDING，
+        响应体附 warning）。每日任务创建配额（M2-F14）：tenant key 超限返回
+        429 + Retry-After。`params.distributed=true` 需商业 License（403）。
+        任务终态 webhook：`params.webhook_url` 非空时触发通知。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/CreateTaskReq" }
+      responses:
+        "201":
+          description: 任务已创建
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task: { $ref: "#/components/schemas/Task" }
+                  warning:
+                    type: string
+                    description: 队列降级提示（NATS 不可用时存在）
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403":
+          description: 商业特性未授权（params.distributed 需 License）
+        "429":
+          description: 每日任务创建配额超限（UTC 日重置）
+          headers:
+            Retry-After:
+              schema: { type: integer, description: 距下一 UTC 日零点的秒数 }
+        "500": { $ref: "#/components/responses/Internal" }
+
+  /api/v1/system:
+    get:
+      tags: [system]
+      summary: 运行时信息与能力开关（设置页数据源）
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 运行模式、存储/队列/缓存实现与各能力开关
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/RuntimeInfo" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/compliance/crs-identify:
+    post:
+      tags: [compliance]
+      summary: 识别数据坐标系（F-21，内核 crs-identify）
+      description: 支持 GeoTIFF（GeoKey）与 ESRI WKT .prj；秒级同步返回。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path]
+              properties:
+                path: { type: string, description: 本机文件路径（.tif/.tiff/.prj） }
+      responses:
+        "200":
+          description: 识别结果（info 为内核 JSON，georef 为像元尺度与 tiepoint）
+        "400": { description: path 缺失 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { description: 文件不存在或不可读 }
+        "422": { description: 内核识别失败（附原始输出） }
+
+  /api/v1/compliance/bursa:
+    post:
+      tags: [compliance]
+      summary: CGCS2000 七参数（Bursa-Wolf）坐标转换（F-21）
+      description: |
+        参数与点集落盘到 `<dataDir>/compliance/bursa/{run_id}/` 便于复核；
+        result 为内核输出（含逐点转换结果与统计）。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [params, points]
+              properties:
+                params:
+                  type: object
+                  description: 七参数（dx/dy/dz 米、rx/ry/rz 角秒、scale_ppm、source/target）
+                points:
+                  type: array
+                  items:
+                    type: array
+                    items: { type: number }
+                    minItems: 3
+                    maxItems: 3
+                  description: 点集 [[lon,lat,h], ...]，上限 200000 点
+      responses:
+        "200":
+          description: 转换完成（summary + result + files）
+        "400": { description: 参数/点集非法或超限 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "422": { description: 内核转换失败（附原始输出） }
+
+  /api/v1/uploads:
+    post:
+      tags: [tasks]
+      summary: 通用文件/目录上传（导入体验），返回可直接建任务的 root
+      description: |
+        multipart/form-data。`paths`（可选）为 JSON 数组，给出与文件 part
+        顺序对齐的相对路径以保留目录结构（浏览器 webkitRelativePath），
+        且必须位于文件 part 之前（服务端流式顺序消费）。
+        文件落盘到 `<dataDir>/uploads/{upload_id}/`，返回的 `root` 可直接
+        作为 `POST /api/v1/tasks` 的 `source` —— 因而能服务 OSGB 目录
+        （数千文件）、OBJ/GLTF/影像等任意格式。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                paths:
+                  type: array
+                  items: { type: string }
+                  description: 各文件相对路径（顺序与文件 part 一致）
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: 上传完成
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/UploadResult" }
+        "400": { description: 非 multipart / paths 非法 / 未收到文件 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "413": { description: 超出单文件、总大小或文件数上限 }
+
+  /api/v1/tasks/import:
+    post:
+      tags: [tasks]
+      summary: 上传 .t3d 包解包导入（M2-F07）
+      description: |
+        multipart/form-data 上传；校验 manifest（SHA256 逐文件、Zip Slip/条目数/
+        解压总量防护）。导入任务直接 SUCCEEDED，进入审批→分发链路。
+        同样受每日任务创建配额约束（M2-F14）。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: .t3d 包（zip；上限 TANGIS_IMPORT_MAX_BYTES，默认 2 GiB）
+                webhook_url:
+                  type: string
+                  description: 覆盖 manifest 内 webhook_url（终态通知）
+      responses:
+        "201":
+          description: 导入任务已创建（SUCCEEDED）
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  task: { $ref: "#/components/schemas/Task" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "413":
+          description: 上传体积/条目数/解压总量超限
+        "429": { $ref: "#/components/responses/QuotaExceeded" }
+        "500": { $ref: "#/components/responses/Internal" }
+
+  /api/v1/tasks/{id}:
+    parameters:
+      - $ref: "#/components/parameters/TaskID"
+      - $ref: "#/components/parameters/XApiKeyHeader"
+    get:
+      tags: [tasks]
+      summary: 查询单个任务（含 progress，按租户隔离）
+      responses:
+        "200":
+          description: 任务详情
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [tasks]
+      summary: 删除任务（按租户隔离）
+      responses:
+        "204": { description: 已删除 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/tasks/{id}/cancel:
+    parameters:
+      - $ref: "#/components/parameters/TaskID"
+      - $ref: "#/components/parameters/XApiKeyHeader"
+    post:
+      tags: [tasks]
+      summary: 取消任务（F-04）：运行中先中断内核进程，再置 CANCELLED
+      responses:
+        "200":
+          description: 已取消
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaskControlResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { description: 任务已终结（SUCCEEDED/FAILED/CANCELLED），无法取消 }
+
+  /api/v1/tasks/{id}/pause:
+    parameters:
+      - $ref: "#/components/parameters/TaskID"
+      - $ref: "#/components/parameters/XApiKeyHeader"
+    post:
+      tags: [tasks]
+      summary: 暂停任务（F-04）：中断内核但保留产物与断点，可 resume 续切
+      responses:
+        "200":
+          description: 已暂停
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaskControlResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { description: 仅 PENDING/RUNNING 可暂停 }
+
+  /api/v1/tasks/{id}/resume:
+    parameters:
+      - $ref: "#/components/parameters/TaskID"
+      - $ref: "#/components/parameters/XApiKeyHeader"
+    post:
+      tags: [tasks]
+      summary: 恢复暂停任务（F-04）：置回 PENDING 并重新入队，内核凭 journal 续切
+      responses:
+        "200":
+          description: 已重新入队
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaskControlResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { description: 仅 PAUSED 可恢复 }
+
+  /api/v1/tasks/{id}/retry:
+    parameters:
+      - $ref: "#/components/parameters/TaskID"
+      - $ref: "#/components/parameters/XApiKeyHeader"
+    post:
+      tags: [tasks]
+      summary: 重试失败/已取消任务（F-04）：清零退避计数并重新入队
+      responses:
+        "200":
+          description: 已重新入队
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/TaskControlResult" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { description: 仅 FAILED/CANCELLED 可重试 }
+
+  # 注意：name 是 gin 通配段（*name），可含子目录，故此处保留通配写法与路由一致
+  /api/v1/tasks/{id}/artifact/*name:
+    parameters:
+      - $ref: "#/components/parameters/TaskID"
+      - $ref: "#/components/parameters/XApiKeyHeader"
+    get:
+      tags: [tasks]
+      summary: 下载任务产物文件（非瓦片类，如合规脱密 GeoTIFF 与留痕 JSON）
+      description: |
+        `name` 为产物目录内的相对路径；服务端做目录逃逸防护，
+        本地优先、MinIO 回源。
+      responses:
+        "200":
+          description: 产物文件（attachment）
+          content:
+            application/octet-stream:
+              schema: { type: string, format: binary }
+        "400": { description: 路径越界或非法 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { description: 任务或产物不存在 }
+
+  /api/v1/tasks/{id}/logs:
+    get:
+      tags: [tasks]
+      summary: 下载内核执行日志（F-04）
+      parameters:
+        - $ref: "#/components/parameters/TaskID"
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 日志文本（data/logs/{id}.log）
+          content:
+            text/plain: {}
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { description: 任务不存在或尚无内核日志 }
+
+  /api/v1/tasks/{id}/qc-report:
+    get:
+      tags: [tasks]
+      summary: 下载完整质检报告 JSON（M2-F08b）
+      description: worker 落盘于产物目录（<output>/qc-report.json）。
+      parameters:
+        - $ref: "#/components/parameters/TaskID"
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 质检报告 JSON
+          content:
+            application/json: {}
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { description: 任务不存在、未跑质检或报告缺失 }
+
+  /api/v1/tasks/{id}/ops-report:
+    get:
+      tags: [tasks]
+      summary: 下载编辑操作留痕 ops.json（M2-F09c）
+      parameters:
+        - $ref: "#/components/parameters/TaskID"
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 留痕 JSON
+          content:
+            application/json: {}
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { description: 任务不存在或无留痕 }
+
+  /api/v1/tasks/{id}/edit:
+    post:
+      tags: [tasks]
+      summary: 发起编辑任务（M2-F09c）
+      description: |
+        对 SUCCEEDED+Approved 的切片任务产物执行内核 `edit`（clip/flatten/
+        ground-align）。op 与 tile/bbox 互斥约束见实现；parent_task_id 指向源任务。
+        # 待确认：bbox/plane/elevation/feather 的完整校验规则
+      parameters:
+        - $ref: "#/components/parameters/TaskID"
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [op]
+              properties:
+                op:
+                  type: string
+                  enum: [clip, flatten, ground-align]
+                tile: { type: string, description: 瓦片名或 all }
+                bbox: { type: string, description: "minx,miny,maxx,maxy" }
+                plane: { type: string, description: "ax+by+cz=d" }
+                elevation: { type: number }
+                feather: { type: number }
+                webhook_url: { type: string }
+      responses:
+        "201": { description: 编辑任务已创建 }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "409": { description: 源任务状态/审批前置条件不满足 }
+
+  /api/v1/tasks/{id}/edit-history:
+    get:
+      tags: [tasks]
+      summary: 编辑链查询（M2-F09c）
+      parameters:
+        - $ref: "#/components/parameters/TaskID"
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200": { description: 编辑链任务列表 # 待确认：响应体结构 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/tasks/{id}/approve:
+    post:
+      tags: [tasks]
+      summary: 发布审批（F-21，仅 admin key）
+      description: 审批通过后任务才进入 /api/v1/services 与分发路径。
+      parameters:
+        - $ref: "#/components/parameters/TaskID"
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 已审批
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Task" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { description: 需要 admin key }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/tasks/{id}/package:
+    get:
+      tags: [tasks]
+      summary: 下载 .t3d 打包产物（M2-F07）
+      description: |
+        前置条件：SUCCEEDED + 已审批 + 产物含 tileset.json。zip 流式下载
+        （Content-Disposition attachment）。鉴权：API Key 或防盗链签名 URL
+        （与瓦片分发同语义）。
+      parameters:
+        - $ref: "#/components/parameters/TaskID"
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: .t3d zip 流
+          content:
+            application/zip: {}
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "403": { description: 任务未审批 }
+        "404": { description: 任务不存在或无产物 }
+        "409": { description: 任务未完成或产物非 3D Tiles }
+
+  /api/v1/services:
+    get:
+      tags: [services]
+      summary: 已发布 3DTiles/影像瓦片/地形服务列表（按租户隔离）
+      description: |
+        产物探测式列表（不造假 URL）：
+        - 影像（tiles/metadata.json 存在）→ wmts_url + tms_url
+        - 地形（layer.json 存在，A5：terrain->tiles 任务）→ terrain_url
+          （Cesium TerrainProvider 直接消费该 layer.json；.terrain 瓦片经
+          同通道 /services/{id}/{z}/{x}/{y}.terrain 分发，无需独立路径）
+        - 3D（tileset.json 存在）→ tileset_url
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200": { description: 服务列表（结构由 service.Server 决定，含已审批任务与元数据） }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /services/{task_id}/{path}:
+    get:
+      tags: [services]
+      summary: 读取已发布产物文件（tileset.json、b3dm、layer.json、.terrain 等）
+      description: |
+        鉴权开启时要求防盗链签名（sig+expires，不走 API Key）；带 CORS。
+        path 为产物内相对路径（通配）。
+      security: []
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: path
+          in: path
+          required: true
+          schema: { type: string }
+          description: 产物相对路径（可含斜杠）
+      responses:
+        "200": { description: 产物文件流 }
+        "404": { description: 任务或文件不存在 }
+
+  /api/v1/wmts:
+    get:
+      tags: [ogc]
+      summary: WMTS 1.0.0 KVP 入口（GetCapabilities / GetTile，F-03）
+      description: |
+        KVP 参数：request=GetCapabilities 输出由真实任务金字塔生成的 XML；
+        request=GetTile 参数 layer/tilematrixset/tilematrix/tilerow/tilecol/format。
+        鉴权：API Key 或签名 URL。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+        - name: request
+          in: query
+          required: true
+          schema: { type: string, enum: [GetCapabilities, GetTile] }
+        - name: service
+          in: query
+          schema: { type: string, example: WMTS }
+        - name: version
+          in: query
+          schema: { type: string, example: 1.0.0 }
+        - name: layer
+          in: query
+          schema: { type: string, description: 任务 ID（GetTile） }
+        - name: tilematrixset
+          in: query
+          schema: { type: string, example: WebMercatorQuad }
+        - name: tilematrix
+          in: query
+          schema: { type: integer }
+        - name: tilerow
+          in: query
+          schema: { type: integer }
+        - name: tilecol
+          in: query
+          schema: { type: integer }
+        - name: format
+          in: query
+          schema: { type: string, example: image/png }
+      responses:
+        "200":
+          description: Capabilities XML 或瓦片二进制
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/wmts/1.0.0/{layer}/{style}/{tms}/{z}/{row}/{col}:
+    get:
+      tags: [ogc]
+      summary: WMTS RESTful GetTile（F-03）
+      description: col 形如 "12.png"；style 仅 default；鉴权同 KVP。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+        - name: layer
+          in: path
+          required: true
+          schema: { type: string }
+        - name: style
+          in: path
+          required: true
+          schema: { type: string, enum: [default] }
+        - name: tms
+          in: path
+          required: true
+          schema: { type: string, example: WebMercatorQuad }
+        - name: z
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: row
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: col
+          in: path
+          required: true
+          schema: { type: string, example: "12.png" }
+      responses:
+        "200": { description: 瓦片二进制 }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/wms:
+    get:
+      tags: [tiles]
+      summary: WMS 1.3.0 / 1.1.1 KVP（GetCapabilities / GetMap）
+      description: |
+        与 WMTS/TMS 共用同一份影像金字塔。GetMap 按 bbox + 目标像素尺寸镶嵌出图。
+        注意 WMS 1.3.0 的 EPSG:4326 轴序为 lat,lon（1.1.1 与 CRS:84 为 lon,lat）。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 能力文档（XML）或按 bbox 渲染的影像（image/png、image/jpeg）
+        "400":
+          description: 参数/坐标系错误（ServiceExceptionReport XML）
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404":
+          description: 图层不存在或未发布（LayerNotDefined）
+
+  /api/v1/wcs:
+    get:
+      tags: [tiles]
+      summary: WCS 1.0.0 KVP（GetCapabilities / DescribeCoverage / GetCoverage）
+      description: |
+        GetCoverage 按 bbox + 尺寸镶嵌出影像；仅输出 image/png（TIFF 需地理标签，
+        本服务不写 GeoKey，故明确拒绝而非产出误导性文件）。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 能力/描述文档（XML）或覆盖影像（image/png）
+        "400":
+          description: 参数/坐标系错误（ServiceExceptionReport XML）
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404":
+          description: 覆盖不存在或未发布（CoverageNotDefined）
+        "501":
+          description: TIFF/GeoTIFF 输出未实现，请改用 image/png
+
+  /api/v1/tms/{task_id}/{z}/{x}/{y}:
+    get:
+      tags: [ogc]
+      summary: TMS 瓦片（F-03，Y 原点左下）
+      description: y 形如 "5.png"；鉴权：API Key 或签名 URL。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+        - name: task_id
+          in: path
+          required: true
+          schema: { type: string }
+        - name: z
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: x
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: y
+          in: path
+          required: true
+          schema: { type: string, example: "5.png" }
+      responses:
+        "200": { description: 瓦片二进制 }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/vector/files:
+    post:
+      tags: [vector]
+      summary: 一步注册本地矢量文件（桌面单机版主路径，M2-F10a）
+      description: |
+        传入本地矢量文件路径，服务端探测格式/几何类型/字段/范围后自动建立
+        「数据源 + 图层」，省去 PostGIS 的两步注册。当前支持 GeoJSON
+        （`.geojson`/`.json`，SRID 固定 4326）；Shapefile 与 GeoPackage 见路线图。
+        注册后的图层名可直接用于 MVT 分发与 WFS GetFeature。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [path]
+              properties:
+                path: { type: string, description: 本地矢量文件绝对路径 }
+                name:
+                  type: string
+                  description: 数据源与图层名；留空取文件名（去扩展名），需符合标识符白名单
+      responses:
+        "201":
+          description: 注册成功（返回数据源与图层元数据）
+        "400": { description: 路径/格式/名称非法，或文件无有效要素 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "409": { description: 名称已存在 }
+
+  /api/v1/vector/sources:
+    get:
+      tags: [vector]
+      summary: 数据源列表（DSN 打码回显，M2-F10a）
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 数据源列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sources:
+                    type: array
+                    items: { $ref: "#/components/schemas/VectorSource" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [vector]
+      summary: 注册 PostGIS 数据源（注册时连通性测试）
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                dsn: { type: string, description: 与 host/port/user/dbname 二选一 }
+                host: { type: string }
+                port: { type: integer }
+                user: { type: string }
+                password: { type: string }
+                dbname: { type: string }
+                sslmode: { type: string }
+      responses:
+        "201":
+          description: 已注册（含探测到的 PostGIS 版本，DSN 打码）
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/VectorSource" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "409": { description: 名称重复 }
+        "502": { description: 数据源连不通 }
+
+  /api/v1/vector/sources/{id}:
+    delete:
+      tags: [vector]
+      summary: 删除数据源（仍被图层引用时 409）
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "204": { description: 已删除 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { description: 仍被图层引用 }
+
+  /api/v1/vector/layers:
+    get:
+      tags: [vector]
+      summary: 图层列表
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 图层列表
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  layers:
+                    type: array
+                    items: { $ref: "#/components/schemas/VectorLayer" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+    post:
+      tags: [vector]
+      summary: 注册图层（几何列/srid/主键/字段自动探测）
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, source_id, schema, table]
+              properties:
+                name: { type: string, description: 全局唯一；MVT source-layer 名与 URL 标识 }
+                source_id: { type: string }
+                schema: { type: string, description: 须过标识符白名单 }
+                table: { type: string, description: 须过标识符白名单 }
+                geometry_column: { type: string, description: 省略则自动探测 }
+                srid: { type: integer, description: 0=取 geometry_columns 探测值 }
+                id_column: { type: string, description: 省略则取主键 }
+                fields:
+                  type: array
+                  items: { type: string }
+                  description: 省略则自动探测全部普通列
+      responses:
+        "201":
+          description: 图层全量定义（含探测结果）
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/VectorLayer" }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { description: 数据源不存在 }
+        "409": { description: 名称重复 }
+
+  /api/v1/vector/layers/{name}:
+    delete:
+      tags: [vector]
+      summary: 删除图层
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "204": { description: 已删除 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/vector/layers/{name}/export:
+    get:
+      tags: [vector]
+      summary: 导出图层为其它 GIS 软件可直接打开的文件（GeoJSON / GeoPackage / Shapefile）
+      description: |
+        把已注册图层回流成文件，供 QGIS / ArcGIS 等直接打开：
+
+        - `format=geojson` → 单个 `.geojson`
+        - `format=gpkg` → 单个 `.gpkg`（GeoPackage，SQLite，属性类型与精度完整保留）
+        - `format=shp` → `.zip` 内含 `.shp/.shx/.dbf/.prj/.cpg`（Shapefile 是文件族）
+
+        Shapefile 的固有限制会带来**有损**处理，通过响应头如实回传，前端据此提示用户：
+
+        - `X-Tangis-Features` 实际写出的要素数
+        - `X-Tangis-Skipped` 因几何类型不兼容被跳过的要素数（Shapefile 一个文件只能一种几何类型）
+        - `X-Tangis-Warnings` 其它提示（字段名超 10 字符被截断等），**URL 编码**后逗号分隔
+
+        属性表以 UTF-8 写出并附带 `.cpg` 声明，避免其它软件按本地编码误解中文。
+        坐标系仅支持 EPSG:4326 / 4490 / 3857（其它坐标系会明确报错，而不是写一个错的 .prj）。
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+          description: 图层名
+        - name: format
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [geojson, gpkg, shp]
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 文件内容（Content-Disposition: attachment）
+          content:
+            application/geo+json: { schema: { type: string, format: binary } }
+            application/geopackage+sqlite3: { schema: { type: string, format: binary } }
+            application/zip: { schema: { type: string, format: binary } }
+        "400": { description: 格式非法、坐标系不支持、图层无可导出要素 }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "503": { description: 矢量能力未装配，或数据源不支持导出（PostGIS） }
+
+  /api/v1/vector/layers/{name}/metadata:
+    get:
+      tags: [vector]
+      summary: 图层元数据（bbox/字段/要素数估算/zoom 建议）
+      description: bbox_wgs84 与 features_estimated 依赖 ANALYZE 统计信息。
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema: { type: string }
+        - $ref: "#/components/parameters/XApiKeyHeader"
+      responses:
+        "200":
+          description: 元数据
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/VectorLayerMetadata" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "503": { description: vector 服务未装配 }
+
+  /api/v1/vector/{layer}/{z}/{x}/{y}:
+    get:
+      tags: [vector]
+      summary: MVT 瓦片分发（M2-F10a）
+      description: |
+        y 可带 .pbf 后缀。空 tile → 204；要素数超 TANGIS_VECTOR_MAX_FEATURES
+        → 413；上游 PostGIS 故障 → 502。鉴权：API Key 或签名 URL。
+        响应头 X-Cache / X-Tangis-Feature-Count。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+        - name: layer
+          in: path
+          required: true
+          schema: { type: string }
+        - name: z
+          in: path
+          required: true
+          schema: { type: integer, minimum: 0, maximum: 22 }
+        - name: x
+          in: path
+          required: true
+          schema: { type: integer }
+        - name: y
+          in: path
+          required: true
+          schema: { type: string, example: "3103.pbf" }
+      responses:
+        "200":
+          description: MVT 二进制
+          content:
+            application/vnd.mapbox-vector-tile: {}
+        "204": { description: 空 tile（零要素） }
+        "400": { $ref: "#/components/responses/BadRequest" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "413": { description: 单 tile 要素数超上限 }
+        "502": { description: 上游 PostGIS 故障 }
+        "503": { description: vector 服务未装配 }
+
+  /api/v1/wfs:
+    get:
+      tags: [ogc]
+      summary: WFS 2.0 简单子集 KVP 入口（GetCapabilities / GetFeature，M2-F14）
+      description: |
+        - request=GetCapabilities：从已注册矢量图层真实生成 XML
+          （ServiceIdentification、FeatureTypeList 含图层名/DefaultCRS/WGS84 bbox）。
+        - request=GetFeature：typename=图层名；bbox 按 CRS84（经度、纬度序）
+          过滤（可省略=全图层）；count 收敛到 TANGIS_WFS_MAX_FEATURES（默认
+          10000）；输出 GeoJSON FeatureCollection（ST_AsGeoJSON，EPSG:4326）。
+        - 异常输出 OGC（ows 1.1）ExceptionReport XML（400/404/502）。
+        - 鉴权与缓存沿用 vector MVT 语义（API Key 或签名 URL）。
+      parameters:
+        - $ref: "#/components/parameters/XApiKeyHeader"
+        - name: request
+          in: query
+          required: true
+          schema: { type: string, enum: [GetCapabilities, GetFeature] }
+        - name: service
+          in: query
+          schema: { type: string, example: WFS }
+        - name: version
+          in: query
+          schema: { type: string, example: 2.0.0 }
+        - name: typename
+          in: query
+          schema: { type: string, description: 已注册矢量图层名（GetFeature） }
+        - name: bbox
+          in: query
+          schema:
+            type: string
+            example: 116.0,39.0,117.0,40.0
+          description: minx,miny,maxx,maxy（CRS84 经纬度序；省略=全图层）
+        - name: count
+          in: query
+          schema: { type: integer, minimum: 0 }
+          description: 返回要素数上限（超出 TANGIS_WFS_MAX_FEATURES 时收敛）
+      responses:
+        "200":
+          description: Capabilities XML 或 GeoJSON FeatureCollection
+          content:
+            application/xml: {}
+            application/geo+json: {}
+        "400":
+          description: 参数非法（OGC ExceptionReport XML）
+          content:
+            application/xml: {}
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404":
+          description: 图层不存在（OGC ExceptionReport XML）
+          content:
+            application/xml: {}
+        "502":
+          description: 上游 PostGIS 故障
+          content:
+            application/xml: {}
+        "503": { description: vector 服务未装配 }
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+  parameters:
+    XApiKeyHeader:
+      name: X-API-Key
+      in: header
+      schema: { type: string }
+      description: API Key（TANGIS_AUTH=off 时可省略）
+    TaskID:
+      name: id
+      in: path
+      required: true
+      schema: { type: string }
+  responses:
+    BadRequest:
+      description: 请求参数非法
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: 缺失或无效的 X-API-Key（disabled key 为 403）
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    NotFound:
+      description: 资源不存在
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    QuotaExceeded:
+      description: 每日任务创建配额超限（429，Retry-After 头）
+      headers:
+        Retry-After:
+          schema: { type: integer }
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Internal:
+      description: 服务端内部错误
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+  schemas:
+    Error:
+      type: object
+      properties:
+        error: { type: string }
+    RuntimeInfo:
+      type: object
+      properties:
+        mode: { type: string, description: "server | desktop" }
+        version: { type: string }
+        data_dir: { type: string, description: 数据目录（桌面模式为 ~/TanGIS） }
+        kernel_bin: { type: string }
+        queue: { type: string, description: "local | nats | none" }
+        storage: { type: string, description: "localfs | minio | none" }
+        cache: { type: string, description: "memory | redis | none" }
+        workers: { type: integer }
+        auth_enabled: { type: boolean }
+        license_plan: { type: string }
+        capabilities:
+          type: object
+          additionalProperties: { type: boolean }
+          description: |
+            能力开关。false 表示"当前模式下不可用"（wms/wcs/terrain 尚未实现；
+            vector/wfs/mvt 在桌面单机版未装配），前端据此灰显而非点了才报错。
+
+    UploadResult:
+      type: object
+      required: [upload_id, root, files, bytes]
+      properties:
+        upload_id: { type: string }
+        root: { type: string, description: 落盘根目录，可直接作为任务 source }
+        files: { type: integer }
+        bytes: { type: integer, format: int64 }
+
+    TaskControlResult:
+      type: object
+      properties:
+        task: { $ref: "#/components/schemas/Task" }
+        interrupted:
+          type: boolean
+          description: 是否命中并中断了运行中的内核进程（仅取消/暂停且任务原为 RUNNING 时返回）
+        warning:
+          type: string
+          description: 队列不可用等降级提示（任务会停留在 PENDING）
+
+    CreateTaskReq:
+      type: object
+      required: [type, source]
+      properties:
+        type:
+          type: string
+          description: 转换类型，如 osgb->3dtiles、image->tiles、t3d-import、edit
+        source: { type: string, description: 源数据引用（MinIO 对象或本地路径） }
+        output:
+          type: string
+          description: 产物输出引用；省略时自动分配为 <dataDir>/outputs/{task_id}（桌面单机版免填路径）
+        params:
+          type: object
+          additionalProperties: true
+          description: |
+            任务参数版本化（JSONB）。已知键：distributed(bool, 商业 License)、
+            qc(bool, 质检)、webhook_url(string, 终态通知)、edit_*（编辑任务）。
+            其余键随任务下发内核。 # 待确认：内核侧参数白名单
+    Task:
+      type: object
+      properties:
+        id: { type: string }
+        type: { type: string }
+        source: { type: string }
+        output: { type: string }
+        status:
+          type: string
+          enum: [PENDING, RUNNING, SUCCEEDED, FAILED]
+        manifest_path: { type: string }
+        error: { type: string, description: 仅 FAILED 时非空 }
+        minio_prefix: { type: string }
+        progress:
+          type: object
+          nullable: true
+          properties:
+            done: { type: integer }
+            total: { type: integer }
+        params:
+          type: object
+          nullable: true
+          additionalProperties: true
+        attempts: { type: integer }
+        tenant_id: { type: string }
+        approved: { type: boolean }
+        qc_status:
+          type: string
+          enum: [pass, fail, skipped, ""]
+          description: 空串=未检（M2-F08b）
+        qc_summary:
+          type: object
+          nullable: true
+          description: 质检摘要（# 待确认：完整字段见 internal/task/store.go QcSummary）
+        parent_task_id: { type: string, description: 编辑任务的源任务（M2-F09c） }
+        ops_summary:
+          type: object
+          nullable: true
+          additionalProperties: true
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    VectorSource:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        dsn: { type: string, description: 打码回显（密码 ****） }
+        postgis_version: { type: string }
+        created_at: { type: string, format: date-time }
+    VectorLayer:
+      type: object
+      properties:
+        name: { type: string }
+        source_id: { type: string }
+        schema: { type: string }
+        table: { type: string }
+        geometry_column: { type: string }
+        geometry_type: { type: string, example: POLYGON }
+        srid: { type: integer }
+        id_column: { type: string }
+        fields:
+          type: array
+          items: { type: string }
+        created_at: { type: string, format: date-time }
+    VectorLayerMetadata:
+      allOf:
+        - $ref: "#/components/schemas/VectorLayer"
+        - type: object
+          properties:
+            bbox_wgs84:
+              type: array
+              items: { type: number }
+              minItems: 4
+              maxItems: 4
+              nullable: true
+              description: 统计信息缺失时为 null；SRID 非 4326/3857 时原样返回原生坐标
+            features_estimated: { type: integer, description: pg_class.reltuples，0=未知 }
+            minzoom: { type: integer }
+            maxzoom: { type: integer }

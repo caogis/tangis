@@ -1,0 +1,11 @@
+[package]
+name = "tangis-editops"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "TanGIS OSGB 实时编辑算子（M2-F09a）：clip / flatten / ground-align + 操作留痕 JSON"
+
+[dependencies]
+tangis-osgb = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }

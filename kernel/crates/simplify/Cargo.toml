@@ -1,0 +1,13 @@
+[package]
+name = "tangis-simplify"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "QEM（Garland-Heckbert）网格简化：边折叠 + 瓦片接缝边界保护（M2-F12a）"
+
+[dependencies]
+thiserror = { workspace = true }
+
+[dev-dependencies]
+# 仅基准测试用：解析真实 osgconv 语料（.osgb）
+tangis-osgb = { path = "../osgb" }

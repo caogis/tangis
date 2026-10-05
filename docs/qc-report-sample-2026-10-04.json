@@ -1,0 +1,2677 @@
+{
+  "schema_version": "1",
+  "generated_at_unix": 1791082984.765507,
+  "source": "../testdata/osgb-real/osgb",
+  "tile_count": 80,
+  "thresholds": {
+    "degenerate": true,
+    "degenerate_area_eps": 1e-10,
+    "normal_flip": true,
+    "normal_flip_max_angle_deg": 120.0,
+    "floating": true,
+    "floating_voxel_size": 5.0,
+    "floating_height_above": 30.0,
+    "floating_max_volume_ratio": 0.05,
+    "crack": true,
+    "crack_gap": 0.5,
+    "self_intersect": true
+  },
+  "tiles": [
+    {
+      "name": "TileC_+000_+000",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+000_+000.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3936,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+000_+001",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+000_+001.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3944,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+000_+002",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+000_+002.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3914,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+000_+003",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+000_+003.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3915,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+001_+000",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+001_+000.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+001_+001",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+001_+001.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3964,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+001_+002",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+001_+002.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3944,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+001_+003",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+001_+003.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3948,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+002_+000",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+002_+000.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+002_+001",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+002_+001.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+002_+002",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+002_+002.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+002_+003",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+002_+003.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+003_+000",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+003_+000.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+003_+001",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+003_+001.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+003_+002",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+003_+002.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "TileC_+003_+003",
+      "source_file": "../testdata/osgb-real/osgb/TileC_+003_+003.osgb",
+      "vertices": 289,
+      "faces": 512,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 736,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 289,
+        "main_vertices": 1,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 3976,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+000_+000",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+000_+000.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23657,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+000_+001",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+000_+001.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23438,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+000_+002",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+000_+002.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23361,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+000_+003",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+000_+003.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23594,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+000_+004",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+000_+004.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23871,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+000_+005",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+000_+005.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23425,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+000_+006",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+000_+006.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23394,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+000_+007",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+000_+007.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23652,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+001_+000",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+001_+000.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 22953,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+001_+001",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+001_+001.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 22472,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+001_+002",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+001_+002.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 22817,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+001_+003",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+001_+003.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23283,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+001_+004",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+001_+004.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23256,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+001_+005",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+001_+005.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23221,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+001_+006",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+001_+006.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23235,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+001_+007",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+001_+007.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23418,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+002_+000",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+002_+000.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23290,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+002_+001",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+002_+001.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23042,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+002_+002",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+002_+002.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 22749,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+002_+003",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+002_+003.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23385,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+002_+004",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+002_+004.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23022,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+002_+005",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+002_+005.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23281,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+002_+006",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+002_+006.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23439,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+002_+007",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+002_+007.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23160,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+003_+000",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+003_+000.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23880,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+003_+001",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+003_+001.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23402,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+003_+002",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+003_+002.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23288,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+003_+003",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+003_+003.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23812,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+003_+004",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+003_+004.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23792,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+003_+005",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+003_+005.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23731,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+003_+006",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+003_+006.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23813,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+003_+007",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+003_+007.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23789,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+004_+000",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+004_+000.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23830,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+004_+001",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+004_+001.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23438,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+004_+002",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+004_+002.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23423,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+004_+003",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+004_+003.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23744,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+004_+004",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+004_+004.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23642,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+004_+005",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+004_+005.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23806,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+004_+006",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+004_+006.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23640,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+004_+007",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+004_+007.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23758,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+005_+000",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+005_+000.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23509,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+005_+001",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+005_+001.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23307,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+005_+002",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+005_+002.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23295,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+005_+003",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+005_+003.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23608,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+005_+004",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+005_+004.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23787,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+005_+005",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+005_+005.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23649,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+005_+006",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+005_+006.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23676,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+005_+007",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+005_+007.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23709,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+006_+000",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+006_+000.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23701,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+006_+001",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+006_+001.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 22868,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+006_+002",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+006_+002.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23294,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+006_+003",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+006_+003.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23582,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+006_+004",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+006_+004.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23684,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+006_+005",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+006_+005.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23475,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+006_+006",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+006_+006.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23744,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+006_+007",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+006_+007.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23236,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+007_+000",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+007_+000.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23456,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+007_+001",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+007_+001.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23369,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+007_+002",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+007_+002.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23196,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+007_+003",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+007_+003.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23510,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+007_+004",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+007_+004.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23576,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+007_+005",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+007_+005.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23381,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+007_+006",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+007_+006.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23454,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    },
+    {
+      "name": "Tile_+007_+007",
+      "source_file": "../testdata/osgb-real/osgb/Tile_+007_+007.osgb",
+      "vertices": 1089,
+      "faces": 2048,
+      "degenerate": {
+        "zero_area": 0,
+        "repeated_vertex": 0,
+        "duplicate_face": 0,
+        "total": 0,
+        "samples": []
+      },
+      "normal_flip": {
+        "edges_checked": 3008,
+        "flipped_edges": 0,
+        "flipped_faces": 0,
+        "isolated_faces": 0,
+        "isolated_flip_rate": 0.0,
+        "samples": []
+      },
+      "floating": {
+        "components": 1,
+        "main_vertices": 1089,
+        "flagged": []
+      },
+      "self_intersect": {
+        "candidate_pairs": 23633,
+        "intersections": 0,
+        "coverage": 1.0,
+        "method": "AABB 空间哈希预筛（全量候选对，非抽样）+ 精确三角形相交（平面侧判/线段-三角形/共面2D）",
+        "samples": []
+      }
+    }
+  ],
+  "cracks": [],
+  "crack_tiles_unpaired": 80,
+  "summary": {
+    "tiles_with_degenerate": 0,
+    "total_degenerate": 0,
+    "tiles_with_normal_flip": 0,
+    "total_flipped_edges": 0,
+    "tiles_with_floating": 0,
+    "total_floating_components": 0,
+    "crack_pairs_checked": 0,
+    "crack_pairs_flagged": 0,
+    "total_crack_segments": 0,
+    "tiles_with_self_intersect": 0,
+    "total_self_intersections": 0,
+    "passed": true
+  }
+}

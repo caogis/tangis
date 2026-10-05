@@ -1,0 +1,11 @@
+[package]
+name = "tangis-manifest"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "TanGIS 切片内核：分块 Manifest 与 LOD 拓扑排序（ADR-2）"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

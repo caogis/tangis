@@ -1,0 +1,38 @@
+{
+  "task_id": "osgb-real-demo",
+  "chunks": [
+    {
+      "id": "Tile_+000_+000",
+      "lod": 1,
+      "bounds": { "min": [0, 0, 0], "max": [1, 1, 1] },
+      "status": "pending",
+      "attempts": 0,
+      "source": "../../testdata/osgb/Tile_+000_+000.osgb"
+    },
+    {
+      "id": "Tile_+000_+001",
+      "lod": 1,
+      "bounds": { "min": [0, 0, 0], "max": [1, 1, 1] },
+      "status": "pending",
+      "attempts": 0,
+      "source": "../../testdata/osgb/Tile_+000_+001.osgb"
+    },
+    {
+      "id": "Tile_+001_+000",
+      "lod": 1,
+      "bounds": { "min": [0, 0, 0], "max": [1, 1, 1] },
+      "status": "pending",
+      "attempts": 0,
+      "source": "../../testdata/osgb/Tile_+001_+000.osgb"
+    },
+    {
+      "id": "Tile_+001_+001",
+      "lod": 1,
+      "bounds": { "min": [0, 0, 0], "max": [1, 1, 1] },
+      "status": "pending",
+      "attempts": 0,
+      "source": "../../testdata/osgb/Tile_+001_+001.osgb",
+      "source_offset": [0, 300, 0]
+    }
+  ]
+}

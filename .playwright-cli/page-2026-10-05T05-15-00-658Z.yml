@@ -1,0 +1,109 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e7]: TanGIS
+      - generic [ref=e8]: v0.1
+    - generic [ref=e10]: 矢量数据
+    - generic [ref=e11]:
+      - generic "服务进程" [ref=e12]: 服务在线
+      - generic "进行中的切片任务" [ref=e14]:
+        - text: 活动任务
+        - generic [ref=e16]: "0"
+    - button "切换到深色主题" [ref=e17] [cursor=pointer]
+  - generic [ref=e20]:
+    - complementary [ref=e21]:
+      - navigation [ref=e22]:
+        - generic [ref=e23]:
+          - generic [ref=e24]: 总览
+          - link "工作台" [ref=e25] [cursor=pointer]:
+            - /url: /
+        - generic [ref=e29]:
+          - generic [ref=e30]: 数据
+          - link "数据导入" [ref=e31] [cursor=pointer]:
+            - /url: /import
+          - link "矢量数据" [ref=e35] [cursor=pointer]:
+            - /url: /vector
+        - generic [ref=e39]:
+          - generic [ref=e40]: 处理
+          - link "切片转换" [ref=e41] [cursor=pointer]:
+            - /url: /convert
+          - link "数据质检" [ref=e45] [cursor=pointer]:
+            - /url: /qc
+          - link "合规工具" [ref=e49] [cursor=pointer]:
+            - /url: /compliance
+          - link "模型编辑" [ref=e53] [cursor=pointer]:
+            - /url: /edit
+        - generic [ref=e57]:
+          - generic [ref=e58]: 服务
+          - link "服务分发" [ref=e59] [cursor=pointer]:
+            - /url: /services
+          - link "三维预览" [ref=e63] [cursor=pointer]:
+            - /url: /preview
+        - generic [ref=e67]:
+          - generic [ref=e68]: 系统
+          - link "任务中心" [ref=e69] [cursor=pointer]:
+            - /url: /tasks
+          - link "系统设置" [ref=e73] [cursor=pointer]:
+            - /url: /settings
+          - link "版本对照" [ref=e77] [cursor=pointer]:
+            - /url: /edition
+    - main [ref=e81]:
+      - generic [ref=e82]:
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - heading "矢量数据" [level=1] [ref=e85]
+            - paragraph [ref=e86]: 本地矢量文件 → 图层注册 → MVT 瓦片 / WFS 要素服务
+          - generic [ref=e87]:
+            - generic [ref=e88]: 3 个图层
+            - button "刷新" [ref=e89] [cursor=pointer]
+        - generic [ref=e92]:
+          - generic [ref=e93]:
+            - generic [ref=e94]: 导入矢量文件
+            - generic [ref=e95]: GeoJSON（.geojson/.json）· Shapefile（.shp/.dbf/.prj）· EPSG:4326 / 4490 / 3857
+          - generic [ref=e96]:
+            - generic [ref=e97] [cursor=pointer]:
+              - generic [ref=e100]: 把矢量文件拖到这里，或点击选择文件
+              - generic [ref=e101]: Shapefile 请连同 .dbf / .prj / .cpg 一起选中（可多选）； 选择文件会先上传到数据目录再注册，大文件建议用右侧「本机路径」直接引用
+            - generic [ref=e102]:
+              - generic [ref=e103]:
+                - text: 本机路径
+                - textbox "本机路径" [ref=e104]:
+                  - /placeholder: /Users/…/beijing_blocks.geojson 或 roads.shp
+              - generic [ref=e105]:
+                - text: 图层名（可选，留空取文件名）
+                - textbox "图层名（可选，留空取文件名）" [ref=e106]:
+                  - /placeholder: beijing_blocks
+              - button "按路径导入" [disabled] [ref=e107]
+        - generic [ref=e108]:
+          - generic [ref=e109]:
+            - generic [ref=e110]:
+              - generic [ref=e111]: 图层
+              - generic [ref=e112]: 3 个
+            - list [ref=e113]:
+              - button "beijing_blocks 面 · EPSG:4326 · 4 字段" [ref=e114] [cursor=pointer]:
+                - generic [ref=e115]:
+                  - generic [ref=e116]: beijing_blocks
+                  - generic [ref=e117]: 面 · EPSG:4326 · 4 字段
+                - button "删除图层" [ref=e118]
+              - button "uploaded_sample 面 · EPSG:4326 · 2 字段" [ref=e121] [cursor=pointer]:
+                - generic [ref=e122]:
+                  - generic [ref=e123]: uploaded_sample
+                  - generic [ref=e124]: 面 · EPSG:4326 · 2 字段
+                - button "删除图层" [ref=e125]
+              - button "districts 面 · EPSG:4326 · 5 字段" [ref=e128] [cursor=pointer]:
+                - generic [ref=e129]:
+                  - generic [ref=e130]: districts
+                  - generic [ref=e131]: 面 · EPSG:4326 · 5 字段
+                - button "删除图层" [ref=e132]
+          - generic [ref=e135]:
+            - generic [ref=e136]: 图层详情
+            - generic [ref=e138]:
+              - text: 选择左侧图层
+              - generic [ref=e139]: 查看元数据、预览要素并复制分发地址
+  - contentinfo [ref=e140]:
+    - generic [ref=e141]: © 2026 武汉草果科技有限公司 · TanGIS 新一代 GIS 数据处理与分发平台
+    - generic [ref=e142]:
+      - link "社区版" [ref=e143]:
+        - /url: /edition
+      - link "版本功能对照" [ref=e144] [cursor=pointer]:
+        - /url: /edition

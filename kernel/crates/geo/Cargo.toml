@@ -1,0 +1,11 @@
+[package]
+name = "tangis-geo"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "TanGIS 合规算子（F-21）：CRS 识别、CGCS2000 七参数转换、DEM 脱密（纯 Rust，无 GDAL）"
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }

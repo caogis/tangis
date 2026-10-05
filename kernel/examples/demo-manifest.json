@@ -1,0 +1,50 @@
+{
+  "task_id": "demo-osgb-task-001",
+  "chunks": [
+    {
+      "id": "root-lod0",
+      "lod": 0,
+      "bounds": { "min": [116.30, 39.95, 0.0], "max": [116.40, 40.05, 120.0] },
+      "status": "pending",
+      "attempts": 0,
+      "children": ["mid-lod1-a", "mid-lod1-b"]
+    },
+    {
+      "id": "mid-lod1-a",
+      "lod": 1,
+      "bounds": { "min": [116.30, 39.95, 0.0], "max": [116.35, 40.00, 60.0] },
+      "status": "pending",
+      "attempts": 0,
+      "children": ["leaf-lod2-a1", "leaf-lod2-a2"]
+    },
+    {
+      "id": "mid-lod1-b",
+      "lod": 1,
+      "bounds": { "min": [116.35, 40.00, 0.0], "max": [116.40, 40.05, 60.0] },
+      "status": "pending",
+      "attempts": 0,
+      "children": ["leaf-lod2-b1"]
+    },
+    {
+      "id": "leaf-lod2-a1",
+      "lod": 2,
+      "bounds": { "min": [116.30, 39.95, 0.0], "max": [116.325, 39.975, 30.0] },
+      "status": "pending",
+      "attempts": 0
+    },
+    {
+      "id": "leaf-lod2-a2",
+      "lod": 2,
+      "bounds": { "min": [116.325, 39.975, 0.0], "max": [116.35, 40.00, 30.0] },
+      "status": "pending",
+      "attempts": 0
+    },
+    {
+      "id": "leaf-lod2-b1",
+      "lod": 2,
+      "bounds": { "min": [116.35, 40.00, 0.0], "max": [116.40, 40.05, 30.0] },
+      "status": "pending",
+      "attempts": 0
+    }
+  ]
+}

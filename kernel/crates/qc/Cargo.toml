@@ -1,0 +1,12 @@
+[package]
+name = "tangis-qc"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "倾斜模型几何质检（M2-F08a）：退化三角形/法线翻转/悬浮块/裂缝初检/自相交初检 → 结构化 JSON 报告"
+
+[dependencies]
+tangis-osgb = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tobj = "4.0.5"
